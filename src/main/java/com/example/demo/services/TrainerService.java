@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.example.demo.models.Move;
 import com.example.demo.models.Pokemon;
 import com.example.demo.models.Trade;
 import com.example.demo.models.Trainer;
@@ -56,6 +57,22 @@ public class TrainerService {
 		addPokemonToTrainer(trade.getTrainer2Id(), trade.getTrainer1Pokemon());
 		deletePokemonFromTrainer(trade.getTrainer1Id(), trade.getTrainer1Pokemon());
 		
+	}
+
+	public void addMoves(Trainer trainer) {
+		trainerRepository.save(trainer);
+		
+	}
+
+	public void deleteMoves(Trainer trainer) {
+		trainerRepository.save(trainer);
+	}
+
+	public List<Move> getMoves(String id, Pokemon pokemon) {
+		Optional<Trainer> trainerOptional = trainerRepository.findById(id);
+		Trainer trainer = trainerOptional.get();
+		Pokemon tempPokemon = trainer.getPokemon().get(trainer.getPokemon().indexOf(pokemon));
+		return tempPokemon.getMoves();
 	}
 	
 }
