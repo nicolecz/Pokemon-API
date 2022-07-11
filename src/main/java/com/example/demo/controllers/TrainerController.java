@@ -1,25 +1,19 @@
 package com.example.demo.controllers;
 
-import java.security.PublicKey;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.index.CompoundIndexDefinition;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.models.Move;
 import com.example.demo.models.Pokemon;
 import com.example.demo.models.Trade;
 import com.example.demo.models.Trainer;
-import com.example.demo.repositories.TrainerRepository;
 import com.example.demo.services.TrainerService;
 
 import lombok.AllArgsConstructor;
@@ -40,10 +34,26 @@ public class TrainerController {
 		trainerService.addTrainer(trainer);
 	}
 	
+	
+	
 	@DeleteMapping("/deletetrainer/{id}")
 	public void deleteTrainer(@PathVariable String id) {
 		trainerService.deleteTrainer(id);
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	@GetMapping("/getpokemon/{id}")
 	public List<Pokemon> getPokemonByTrainer(@PathVariable String id) {
