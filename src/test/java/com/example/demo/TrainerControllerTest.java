@@ -32,6 +32,7 @@ import static org.mockito.BDDMockito.*;
 
 import com.example.demo.controllers.TrainerController;
 import com.example.demo.models.Pokemon;
+import com.example.demo.models.Trade;
 import com.example.demo.models.Trainer;
 import com.example.demo.services.TrainerService;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -186,6 +187,32 @@ class TrainerControllerTest {
 		mockMvc.perform(post("/deletepokemon/{id}", trainerId)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(pokemon)))
+				.andExpect(status().isOk());
+	}
+	
+	@Test
+	void whenTradingPokemon_thenReturns200() throws Exception {
+		// GIVEN ======================================================
+		Trainer trainer1 = new Trainer();
+		trainer1.setId("1");
+		String trainer1Id = trainer1.getId();
+		Pokemon pokemon1 = new Pokemon();
+		pokemon1.setName("Charmander");
+		
+		Trainer trainer2 = new Trainer();
+		trainer2.setId("2");
+		String trainer2Id = trainer2.getId();
+		Pokemon pokemon2 = new Pokemon();
+		pokemon2.setName("Pikachu");
+		
+		Trade trade = new Trade(trainer1Id, trainer2Id, pokemon1, pokemon2);
+		
+		doNothing().when(trainerService).tradePokemon(trade);
+		
+		// WHEN ==================================================
+		mockMvc.perform(post("/trade")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(trade)))
 				.andExpect(status().isOk());
 	}
 	

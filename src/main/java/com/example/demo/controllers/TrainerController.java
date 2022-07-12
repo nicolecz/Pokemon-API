@@ -49,10 +49,6 @@ public class TrainerController {
 		trainerService.addPokemonToTrainer(id, pokemon);
 	}
 	
-	
-	
-	
-	
 	@PostMapping("/deletepokemon/{id}")
 	public void deletePokemonFromTrainer(@PathVariable String id, @RequestBody Pokemon pokemon) {
 		trainerService.deletePokemonFromTrainer(id, pokemon);
@@ -66,6 +62,10 @@ public class TrainerController {
 	public void tradePokemon(@RequestBody Trade trade) {
 		trainerService.tradePokemon(trade);
 	}
+	
+	
+	
+	
 	
 	@PutMapping("/addmoves") 
 	public void addMoves(@RequestBody Trainer trainer ) {
