@@ -44,12 +44,6 @@ public class TrainerController {
 		return trainerService.getPokemonByTrainer(id);
 	}
 	
-	
-	
-	
-	
-	
-	
 	@PostMapping("/addpokemon/{id}")
 	public void addPokemonToTrainer(@PathVariable String id, @RequestBody Pokemon pokemon) {
 		trainerService.addPokemonToTrainer(id, pokemon);
@@ -58,10 +52,15 @@ public class TrainerController {
 	
 	
 	
+	
 	@PostMapping("/deletepokemon/{id}")
 	public void deletePokemonFromTrainer(@PathVariable String id, @RequestBody Pokemon pokemon) {
 		trainerService.deletePokemonFromTrainer(id, pokemon);
 	}
+	
+	
+	
+	
 	
 	@PostMapping("/trade")
 	public void tradePokemon(@RequestBody Trade trade) {

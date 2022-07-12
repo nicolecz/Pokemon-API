@@ -15,6 +15,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -27,6 +28,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import static org.mockito.BDDMockito.*;
 
 import com.example.demo.controllers.TrainerController;
 import com.example.demo.models.Pokemon;
@@ -110,10 +112,9 @@ class TrainerControllerTest {
 	void whenDeletingTrainer_thenReturns200() throws Exception {
 		// GIVEN ======================================================
 		String trainerId = "11";
-		
-		// WHEN =======================================================
 		doNothing().when(trainerService).deleteTrainer(trainerId);
 		
+		// WHEN =======================================================
 		mockMvc.perform(delete("/deletetrainer/{id}",trainerId))
 				.andExpect(status().isOk());
 		}
@@ -145,6 +146,49 @@ class TrainerControllerTest {
 		
 		assertThat(ashPokemon).isEqualTo(actualPokemonReturned);
 	}
+	
+	@Test
+	void whenAddingPokemonToTrainer_thenReturns200() throws Exception{
+		// GIVEN ======================================================
+		Trainer givenTrainer = new Trainer();
+		givenTrainer.setTrainerName("Ash");
+		givenTrainer.setId("abc");
+		Pokemon pokemon = new Pokemon();
+		pokemon.setName("Charmander");
+		List<Pokemon> ashPokemon = new ArrayList<>();
+		ashPokemon.add(pokemon);
+		givenTrainer.setPokemon(ashPokemon);
+		String trainerId = givenTrainer.getId();
+		
+		// WHEN ======================================================
+		doNothing().when(trainerService).addPokemonToTrainer(trainerId, pokemon);
+		
+		mockMvc.perform(post("/addpokemon/{id}", trainerId)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(pokemon)))
+				.andExpect(status().isOk());
+	}
+	
+	@Test
+	void whenDeletingPokemonFromTrainer_thenReturns200() throws Exception {
+		// GIVEN ========================================================
+		Trainer givenTrainer = new Trainer();
+		givenTrainer.setId("testId");
+		String trainerId = givenTrainer.getId();
+		Pokemon pokemon = new Pokemon();
+		pokemon.setName("Pikachu");
+		List<Pokemon> pokemonList = new ArrayList<>();
+		pokemonList.add(pokemon);
+		
+		doNothing().when(trainerService).deletePokemonFromTrainer(trainerId, pokemon);
+		
+		// WHEN ========================================================
+		mockMvc.perform(post("/deletepokemon/{id}", trainerId)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(pokemon)))
+				.andExpect(status().isOk());
+	}
+	
 	
 	}
 
