@@ -31,6 +31,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import static org.mockito.BDDMockito.*;
 
 import com.example.demo.controllers.TrainerController;
+import com.example.demo.models.Move;
 import com.example.demo.models.Pokemon;
 import com.example.demo.models.Trade;
 import com.example.demo.models.Trainer;
@@ -244,6 +245,32 @@ class TrainerControllerTest {
 				.andExpect(status().isOk());
 	}
 	
-	
+	@Test
+	void whenGettingMoves_thenReturns200() throws Exception {
+		// GIVEN ===============================================
+		Trainer givenTrainer = new Trainer();
+		givenTrainer.setId("17");
+		String trainerId = givenTrainer.getId();
+		Pokemon pokemon = new Pokemon();
+		Move move = new Move();
+		List<Move> moves = new ArrayList<>();
+		moves.add(move);
+		pokemon.setMoves(moves);
+		
+		given(trainerService.getMoves(trainerId, pokemon)).willReturn(moves);
+		
+		// WHEN ================================================
+		MvcResult mvcResult = mockMvc.perform(get("/getmoves/{id}", trainerId)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(pokemon)))
+				.andExpect(status().isOk())
+				.andReturn();
+		
+		// THEN ================================================
+		String response = mvcResult.getResponse().getContentAsString();
+		List<Move> actualMovesReturnedList = objectMapper.readValue(response, new TypeReference<List<Move>>() {});
+		
+		assertThat(moves).isEqualTo(actualMovesReturnedList);
+	}
 	}
 

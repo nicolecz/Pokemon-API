@@ -64,16 +64,10 @@ public class TrainerController {
 		trainerService.addMoves(trainer);
 	}	
 	
-	
-	
-	
 	@PutMapping("/deletemoves")
 	public void deleteMoves(@RequestBody Trainer trainer) {
 		trainerService.deleteMoves(trainer);
 	}
-	
-	
-	
 	
 	@GetMapping("/getmoves/{id}")
 	public List<Move> getMoves(@PathVariable String id, @RequestBody Pokemon pokemon) {
