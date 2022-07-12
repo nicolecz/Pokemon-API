@@ -230,6 +230,20 @@ class TrainerControllerTest {
 				.andExpect(status().isOk());
 	}
 	
+	@Test
+	void whenDeletingMoves_thenReturns200() throws Exception {
+		// GIVEN =================================================
+		Trainer givenTrainer = new Trainer();
+		
+		doNothing().when(trainerService).deleteMoves(givenTrainer);
+		
+		// WHEN ==================================================
+		mockMvc.perform(put("/deletemoves")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(givenTrainer)))
+				.andExpect(status().isOk());
+	}
+	
 	
 	}
 
