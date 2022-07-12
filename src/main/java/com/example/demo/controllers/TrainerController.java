@@ -54,10 +54,6 @@ public class TrainerController {
 		trainerService.deletePokemonFromTrainer(id, pokemon);
 	}
 	
-	
-	
-	
-	
 	@PostMapping("/trade")
 	public void tradePokemon(@RequestBody Trade trade) {
 		trainerService.tradePokemon(trade);
@@ -71,6 +67,9 @@ public class TrainerController {
 	public void addMoves(@RequestBody Trainer trainer ) {
 		trainerService.addMoves(trainer);
 	}	
+	
+	
+	
 	
 	@PutMapping("/deletemoves")
 	public void deleteMoves(@RequestBody Trainer trainer) {

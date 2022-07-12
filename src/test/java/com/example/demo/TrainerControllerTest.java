@@ -216,6 +216,20 @@ class TrainerControllerTest {
 				.andExpect(status().isOk());
 	}
 	
+	@Test
+	void whenAddingMoves_thenReturns200() throws Exception {
+		// GIVEN =================================================
+		Trainer givenTrainer = new Trainer();
+		
+		doNothing().when(trainerService).addMoves(givenTrainer);
+		
+		// WHEN ==================================================
+		mockMvc.perform(put("/addmoves")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(givenTrainer)))
+				.andExpect(status().isOk());
+	}
+	
 	
 	}
 
