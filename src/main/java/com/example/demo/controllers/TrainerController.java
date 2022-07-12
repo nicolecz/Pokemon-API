@@ -34,36 +34,29 @@ public class TrainerController {
 		trainerService.addTrainer(trainer);
 	}
 	
-	
-	
 	@DeleteMapping("/deletetrainer/{id}")
 	public void deleteTrainer(@PathVariable String id) {
 		trainerService.deleteTrainer(id);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	@GetMapping("/getpokemon/{id}")
 	public List<Pokemon> getPokemonByTrainer(@PathVariable String id) {
 		return trainerService.getPokemonByTrainer(id);
 	}
 	
+	
+	
+	
+	
+	
+	
 	@PostMapping("/addpokemon/{id}")
 	public void addPokemonToTrainer(@PathVariable String id, @RequestBody Pokemon pokemon) {
 		trainerService.addPokemonToTrainer(id, pokemon);
 	}
+	
+	
+	
 	
 	@PostMapping("/deletepokemon/{id}")
 	public void deletePokemonFromTrainer(@PathVariable String id, @RequestBody Pokemon pokemon) {

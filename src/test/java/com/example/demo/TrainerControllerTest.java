@@ -29,8 +29,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.example.demo.controllers.TrainerController;
+import com.example.demo.models.Pokemon;
 import com.example.demo.models.Trainer;
 import com.example.demo.services.TrainerService;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 // this spins up everything needed for the controller to work
@@ -66,6 +68,7 @@ class TrainerControllerTest {
 		List<Trainer> expectedTrainerList = new ArrayList<>(); 
 		Trainer givenTrainer1 = new Trainer();
 		givenTrainer1.setHomeTown("balh");
+		expectedTrainerList.add(givenTrainer1);
 		
 		// WHEN ====================================================
 		
@@ -82,7 +85,7 @@ class TrainerControllerTest {
 		
 		// get the response from the above call and turn it into a list of Trainer objects
 		String response = mvcResult.getResponse().getContentAsString();
-		List<Trainer> actualTrainersReturned = objectMapper.readValue(response, List.class); 
+		List<Trainer> actualTrainersReturned = objectMapper.readValue(response, new TypeReference<List<Trainer>>(){}); 
 		
 		assertThat(actualTrainersReturned).isEqualTo(expectedTrainerList);
 	}
@@ -104,7 +107,7 @@ class TrainerControllerTest {
 	}
 	
 	@Test
-	void  whenDeletingTrainer_thenReturns200() throws Exception {
+	void whenDeletingTrainer_thenReturns200() throws Exception {
 		// GIVEN ======================================================
 		String trainerId = "11";
 		
@@ -113,7 +116,35 @@ class TrainerControllerTest {
 		
 		mockMvc.perform(delete("/deletetrainer/{id}",trainerId))
 				.andExpect(status().isOk());
-	
 		}
+	
+	@Test
+	void whenGettingPokemonByTrainer_thenReturns200() throws Exception {
+		// GIVEN =======================================================
+		Trainer givenTrainer = new Trainer();
+		givenTrainer.setTrainerName("Ash");
+		givenTrainer.setId("abc");
+		Pokemon pokemon = new Pokemon();
+		pokemon.setName("Charmander");
+		List<Pokemon> ashPokemon = new ArrayList<>();
+		ashPokemon.add(pokemon);
+		givenTrainer.setPokemon(ashPokemon);
+		String trainerId = givenTrainer.getId();
+		
+		// WHEN ========================================================
+		when(trainerService.getPokemonByTrainer(trainerId))
+		.thenReturn(ashPokemon);
+		
+		MvcResult mvcResult = mockMvc.perform(get("/getpokemon/{id}", trainerId))
+				.andExpect(status().isOk())
+				.andReturn();
+		
+		// THEN =======================================================
+		String response = mvcResult.getResponse().getContentAsString();
+		List<Pokemon> actualPokemonReturned = objectMapper.readValue(response, new TypeReference<List<Pokemon>>(){});
+		
+		assertThat(ashPokemon).isEqualTo(actualPokemonReturned);
+	}
+	
 	}
 
