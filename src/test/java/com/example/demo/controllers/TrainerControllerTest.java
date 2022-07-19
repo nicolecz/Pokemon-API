@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.controllers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doNothing;
@@ -65,7 +65,7 @@ class TrainerControllerTest {
 	}
 	
 	@Test
-	void whenValidInput_thenReturns200() throws Exception {
+	void whenFindingAllTrainers_thenReturns200() throws Exception {
 		
 		// GIVEN ===================================================
 		
@@ -95,19 +95,26 @@ class TrainerControllerTest {
 	}
 	
 	@Test
-	void whenValidInputAddingTrainer_thenReturns200() throws Exception {
+	void whenAddingTrainer_thenReturns200() throws Exception {
 		// GIVEN =====================================================
 
 		Trainer expectedTrainer = new Trainer();
 		expectedTrainer.setTrainerName("Ash");
 		
-		// WHEN ======================================================
-		doNothing().when(trainerService).addTrainer(expectedTrainer);
+		given(trainerService.addTrainer(expectedTrainer)).willReturn(expectedTrainer);
 		
-		mockMvc.perform(post("/addtrainer")
+		// WHEN ======================================================
+		MvcResult mvcResult = mockMvc.perform(post("/addtrainer")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(expectedTrainer)))
-				.andExpect(status().isOk());
+				.andExpect(status().isOk())
+				.andReturn();
+		
+		// THEN =======================================================
+		String response = mvcResult.getResponse().getContentAsString();
+		Trainer actualTrainer = objectMapper.readValue(response, Trainer.class);
+		
+		assertThat(actualTrainer).isEqualTo(expectedTrainer);
 	}
 	
 	@Test
@@ -146,7 +153,7 @@ class TrainerControllerTest {
 		String response = mvcResult.getResponse().getContentAsString();
 		List<Pokemon> actualPokemonReturned = objectMapper.readValue(response, new TypeReference<List<Pokemon>>(){});
 		
-		assertThat(ashPokemon).isEqualTo(actualPokemonReturned);
+		assertThat(actualPokemonReturned).isEqualTo(ashPokemon);
 	}
 	
 	@Test
@@ -162,13 +169,21 @@ class TrainerControllerTest {
 		givenTrainer.setPokemon(ashPokemon);
 		String trainerId = givenTrainer.getId();
 		
-		// WHEN ======================================================
-		doNothing().when(trainerService).addPokemonToTrainer(trainerId, pokemon);
+		given(trainerService.addPokemonToTrainer(trainerId, pokemon)).willReturn(givenTrainer);
 		
-		mockMvc.perform(post("/addpokemon/{id}", trainerId)
+		// WHEN ======================================================
+		MvcResult mvcResult = mockMvc.perform(post("/addpokemon/{id}", trainerId)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(pokemon)))
-				.andExpect(status().isOk());
+				.andExpect(status().isOk())
+				.andReturn();
+		
+		// THEN ======================================================
+		
+		String response = mvcResult.getResponse().getContentAsString();
+		Trainer actualTrainer = objectMapper.readValue(response, Trainer.class);
+		
+		assertThat(actualTrainer).isEqualTo(givenTrainer);
 	}
 	
 	@Test
@@ -182,13 +197,21 @@ class TrainerControllerTest {
 		List<Pokemon> pokemonList = new ArrayList<>();
 		pokemonList.add(pokemon);
 		
-		doNothing().when(trainerService).deletePokemonFromTrainer(trainerId, pokemon);
+		given(trainerService.deletePokemonFromTrainer(trainerId, pokemon)).willReturn(givenTrainer);
 		
 		// WHEN ========================================================
-		mockMvc.perform(post("/deletepokemon/{id}", trainerId)
+		MvcResult mvcResult = mockMvc.perform(post("/deletepokemon/{id}", trainerId)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(pokemon)))
-				.andExpect(status().isOk());
+				.andExpect(status().isOk())
+				.andReturn();
+		
+		// THEN ========================================================
+		
+		String response = mvcResult.getResponse().getContentAsString();
+		Trainer actualTrainer = objectMapper.readValue(response, Trainer.class);
+		
+		assertThat(actualTrainer).isEqualTo(givenTrainer);
 	}
 	
 	@Test
@@ -222,13 +245,20 @@ class TrainerControllerTest {
 		// GIVEN =================================================
 		Trainer givenTrainer = new Trainer();
 		
-		doNothing().when(trainerService).addMoves(givenTrainer);
+		given(trainerService.addMoves(givenTrainer)).willReturn(givenTrainer);
 		
 		// WHEN ==================================================
-		mockMvc.perform(put("/addmoves")
+		MvcResult mvcResult = mockMvc.perform(put("/addmoves")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(givenTrainer)))
-				.andExpect(status().isOk());
+				.andExpect(status().isOk())
+				.andReturn();
+		
+		// THEN ==================================================
+		String response = mvcResult.getResponse().getContentAsString();
+		Trainer actualTrainer = objectMapper.readValue(response, Trainer.class);
+		
+		assertThat(actualTrainer).isEqualTo(givenTrainer);
 	}
 	
 	@Test
@@ -236,41 +266,20 @@ class TrainerControllerTest {
 		// GIVEN =================================================
 		Trainer givenTrainer = new Trainer();
 		
-		doNothing().when(trainerService).deleteMoves(givenTrainer);
+		given(trainerService.deleteMoves(givenTrainer)).willReturn(givenTrainer);
 		
 		// WHEN ==================================================
-		mockMvc.perform(put("/deletemoves")
+		MvcResult mvcResult = mockMvc.perform(put("/deletemoves")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(givenTrainer)))
-				.andExpect(status().isOk());
-	}
-	
-	@Test
-	void whenGettingMoves_thenReturns200() throws Exception {
-		// GIVEN ===============================================
-		Trainer givenTrainer = new Trainer();
-		givenTrainer.setId("17");
-		String trainerId = givenTrainer.getId();
-		Pokemon pokemon = new Pokemon();
-		Move move = new Move();
-		List<Move> moves = new ArrayList<>();
-		moves.add(move);
-		pokemon.setMoves(moves);
-		
-		given(trainerService.getMoves(trainerId, pokemon)).willReturn(moves);
-		
-		// WHEN ================================================
-		MvcResult mvcResult = mockMvc.perform(get("/getmoves/{id}", trainerId)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(pokemon)))
 				.andExpect(status().isOk())
 				.andReturn();
 		
-		// THEN ================================================
+		// THEN ==================================================
 		String response = mvcResult.getResponse().getContentAsString();
-		List<Move> actualMovesReturnedList = objectMapper.readValue(response, new TypeReference<List<Move>>() {});
+		Trainer actualTrainer = objectMapper.readValue(response, Trainer.class);
 		
-		assertThat(moves).isEqualTo(actualMovesReturnedList);
+		assertThat(actualTrainer).isEqualTo(givenTrainer);
 	}
-	}
+}
 

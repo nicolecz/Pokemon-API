@@ -23,8 +23,8 @@ public class TrainerService {
 		return trainerRepository.findAll();
 	}
 	
-	public void addTrainer(Trainer trainer) {
-		trainerRepository.insert(trainer);
+	public Trainer addTrainer(Trainer trainer) {
+		return trainerRepository.insert(trainer);
 	}
 
 	public void deleteTrainer(String id) {
@@ -37,18 +37,18 @@ public class TrainerService {
 		return trainer.getPokemon();
 	}
 
-	public void addPokemonToTrainer(String id, Pokemon pokemon) {
+	public Trainer addPokemonToTrainer(String id, Pokemon pokemon) {
 		Optional<Trainer> trainerOptional = trainerRepository.findById(id);
 		Trainer trainer = trainerOptional.get();
 		trainer.getPokemon().add(pokemon);
-		trainerRepository.save(trainer);
+		return trainerRepository.save(trainer);
 	}
 
-	public void deletePokemonFromTrainer(String id, Pokemon pokemon) {
+	public Trainer deletePokemonFromTrainer(String id, Pokemon pokemon) {
 		Optional<Trainer> trainerOptional = trainerRepository.findById(id);
 		Trainer trainer = trainerOptional.get();
 		trainer.getPokemon().remove(pokemon);
-		trainerRepository.save(trainer);	
+		return trainerRepository.save(trainer);	
 	}
 
 	public void tradePokemon(Trade trade) {
@@ -59,20 +59,12 @@ public class TrainerService {
 		
 	}
 
-	public void addMoves(Trainer trainer) {
-		trainerRepository.save(trainer);
+	public Trainer addMoves(Trainer trainer) {
+		return trainerRepository.save(trainer);
 		
 	}
 
-	public void deleteMoves(Trainer trainer) {
-		trainerRepository.save(trainer);
+	public Trainer deleteMoves(Trainer trainer) {
+		return trainerRepository.save(trainer);
 	}
-
-	public List<Move> getMoves(String id, Pokemon pokemon) {
-		Optional<Trainer> trainerOptional = trainerRepository.findById(id);
-		Trainer trainer = trainerOptional.get();
-		Pokemon tempPokemon = trainer.getPokemon().get(trainer.getPokemon().indexOf(pokemon));
-		return tempPokemon.getMoves();
-	}
-	
 }

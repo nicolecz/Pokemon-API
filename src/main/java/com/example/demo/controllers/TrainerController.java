@@ -30,8 +30,8 @@ public class TrainerController {
 	}
 	
 	@PostMapping("/addtrainer")
-	public void addTrainer(@RequestBody Trainer trainer) {
-		trainerService.addTrainer(trainer);
+	public Trainer addTrainer(@RequestBody Trainer trainer) {
+		return trainerService.addTrainer(trainer);
 	}
 	
 	@DeleteMapping("/deletetrainer/{id}")
@@ -45,13 +45,13 @@ public class TrainerController {
 	}
 	
 	@PostMapping("/addpokemon/{id}")
-	public void addPokemonToTrainer(@PathVariable String id, @RequestBody Pokemon pokemon) {
-		trainerService.addPokemonToTrainer(id, pokemon);
+	public Trainer addPokemonToTrainer(@PathVariable String id, @RequestBody Pokemon pokemon) {
+		return trainerService.addPokemonToTrainer(id, pokemon);
 	}
 	
 	@PostMapping("/deletepokemon/{id}")
-	public void deletePokemonFromTrainer(@PathVariable String id, @RequestBody Pokemon pokemon) {
-		trainerService.deletePokemonFromTrainer(id, pokemon);
+	public Trainer deletePokemonFromTrainer(@PathVariable String id, @RequestBody Pokemon pokemon) {
+		return trainerService.deletePokemonFromTrainer(id, pokemon);
 	}
 	
 	@PostMapping("/trade")
@@ -60,17 +60,12 @@ public class TrainerController {
 	}
 	
 	@PutMapping("/addmoves") 
-	public void addMoves(@RequestBody Trainer trainer ) {
-		trainerService.addMoves(trainer);
+	public Trainer addMoves(@RequestBody Trainer trainer ) {
+		return trainerService.addMoves(trainer);
 	}	
 	
 	@PutMapping("/deletemoves")
-	public void deleteMoves(@RequestBody Trainer trainer) {
-		trainerService.deleteMoves(trainer);
-	}
-	
-	@GetMapping("/getmoves/{id}")
-	public List<Move> getMoves(@PathVariable String id, @RequestBody Pokemon pokemon) {
-		return trainerService.getMoves(id, pokemon);
+	public Trainer deleteMoves(@RequestBody Trainer trainer) {
+		return trainerService.deleteMoves(trainer);
 	}
 }
