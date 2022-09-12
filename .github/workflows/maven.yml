@@ -23,5 +23,5 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
     - name: Execute Jar file
-      run: sudo kill -9 'sudo lsof -t -i:8080' & sudo java -jar /home/ec2-user/actions-runner/_work/Pokemon-API/Pokemon-API/target/PokemonAPI-0.0.1-SNAPSHOT.jar &
+      run: sudo kill -9 `sudo lsof -t -i:8080` & sudo java -Dspring.profiles.active=prod -Djavax.net.ssl.trustStore=$KEYSTORE_PATH -Djavax.net.ssl.trustStorePassword=$KEYSTORE_PASSWORD -jar /home/ec2-user/actions-runner/_work/Pokemon-API/Pokemon-API/target/PokemonAPI-0.0.1-SNAPSHOT.jar &
       
